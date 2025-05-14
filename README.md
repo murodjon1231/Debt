@@ -2,5 +2,5 @@
 
 # Debt App
 
-Login: bakha
-Password: 3117
+Login: Murod
+Password: 0890
