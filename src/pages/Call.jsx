@@ -11,7 +11,7 @@ const Call = () => {
 			bankName: 'Agrobank',
 			phone: '1216',
 			description: 'Customer service for Agrobank clients',
-			logo: '/bank-logos/agrobank.png' // You can add these images later
+			logo: '/bank-logos/agrobank.png'
 		},
 		{
 			bankName: 'Hamkorbank',
@@ -50,7 +50,7 @@ const Call = () => {
 	);
 	
 	return (
-		<div className='container'>
+		<div className='container pt-5'>
 			<div className='page'>
 				<div className="d-flex align-items-center mb-3">
 					<FaPhone className="text-primary me-3" size={20} />

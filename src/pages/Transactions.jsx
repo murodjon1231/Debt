@@ -27,7 +27,7 @@ const Transactions = () => {
 	};
 
 	return (
-		<div className='container'>
+		<div className='container pt-5'>
 			<div className='page'>
 				<div className="d-flex align-items-center mb-4">
 					<FaExchangeAlt className="text-primary me-3" size={24} />

@@ -40,7 +40,7 @@ const Debit = ({
 	)
 
 	return (
-		<div className='container'>
+		<div className='container pt-5'>
 			<InputGroup className='mb-3'>
 				<Form.Control
 					value={search}

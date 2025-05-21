@@ -13,7 +13,7 @@ const Navbar = () => {
 	return (
 		<div className={style["navbar-container"]}>
 			<div className={style["navbar"]}>
-				<h4 className={style["brand"]}>Dashbord By <span className={style["brand-highlight"]}>MurodDev</span></h4>
+				<h4 className={style["brand"]}>Dashbord By <span className={style["brand-highlight"]}>Auto-Parts</span></h4>
 				<div className={style["nav-controls"]}>
 					<button onClick={handleLogout} className={style["logout-btn"]}>
 						Logout

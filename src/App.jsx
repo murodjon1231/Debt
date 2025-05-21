@@ -8,6 +8,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Transactions from './pages/Transactions'
 import axios from 'axios'
+import NotFound from './pages/NotFound'
 
 const API_URL = 'https://682d90894fae188947568d64.mockapi.io/debt'
 
@@ -181,6 +182,7 @@ const App = () => {
 							element={isLogin ? <Call /> : <Navigate to={'/login'} />}
 						/>
 					</Route>
+					<Route path='*' element={<NotFound/>} />
 				</Routes>
 
 				<ToastContainer />

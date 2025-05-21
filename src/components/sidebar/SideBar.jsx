@@ -1,4 +1,3 @@
-// SideBar.jsx
 import React, { useState } from 'react'
 import { BsWindowSidebar } from 'react-icons/bs'
 import { FaCoins } from 'react-icons/fa'
