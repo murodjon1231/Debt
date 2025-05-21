@@ -1,29 +1,92 @@
+.navbar-container {
+	position: fixed;
+	top: 0;
+	right: 0;
+	left: 250px;
+	background-color: white;
+	z-index: 50;
+	box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+	height: 60px;
+	border-bottom-left-radius: 20px;
+}
+
 .navbar {
-	padding: 18px 23px;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	-webkit-box-shadow: 0px 0px 27px -15px rgba(0, 0, 0, 0.75);
-	-moz-box-shadow: 0px 0px 27px -15px rgba(0, 0, 0, 0.75);
-	box-shadow: 0px 0px 27px -15px rgba(0, 0, 0, 0.75);
-	border-radius: 20px;
+	padding: 0 30px;
+	height: 100%;
 }
 
-.login-img button img {
-	width: 44px;
-	border-radius: 50%;
-	transition: 0.5s;
+.brand {
+	font-size: 1.2rem;
+	margin: 0;
 }
 
-.login-img button {
-	border: none;
+.brand-highlight {
+	color: #0d6efd;
+}
+
+.nav-controls {
+	display: flex;
+	align-items: center;
+	gap: 15px;
+}
+
+.logout-btn {
+	background-color: #f8f9fa;
+	border: 1px solid #dee2e6;
+	border-radius: 5px;
+	padding: 5px 12px;
+	font-size: 0.9rem;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.logout-btn:hover {
+	background-color: red;
+	color: white;
+}
+
+.login-btn {
 	background: none;
+	border: none;
 	cursor: pointer;
 }
 
-.login-img button:hover img {
-	-webkit-box-shadow: 0px 0px 27px -7px rgba(255, 0, 51, 1);
-	-moz-box-shadow: 0px 0px 27px -7px rgba(255, 0, 51, 1);
-	box-shadow: 0px 0px 27px -7px rgba(255, 0, 51, 1);
-	transition: 0.5s;
+.login-btn img {
+	width: 55px;
+	height: 55px;
+	border-radius: 50%;
+}
+
+@media (max-width: 991px) {
+	.navbar-container {
+		left: 0;
+		width: 100%;
+	}
+	
+	.navbar {
+		padding: 0 15px;
+	}
+	
+	.brand {
+		font-size: 1rem;
+	}
+}
+
+@media (max-width: 576px) {
+	.brand {
+		font-size: 0.85rem;
+	}
+	
+	.logout-btn {
+		padding: 3px 8px;
+		font-size: 0.8rem;
+	}
+	
+	.login-btn img {
+		width: 30px;
+		height: 30px;
+	}
 }

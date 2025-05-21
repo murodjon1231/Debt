@@ -1,7 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-bady {
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css");
+
+body {
 	background-color: #e6e9ee;
 }
+
 * {
 	margin: 0;
 	padding: 0;
@@ -22,6 +25,7 @@ bady {
 	-moz-box-shadow: 0px 0px 27px -15px rgba(0, 0, 0, 0.75);
 	box-shadow: 0px 0px 27px -15px rgba(0, 0, 0, 0.75);
 	border-radius: 20px;
+	background-color: #fff;
 }
 
 .active {
@@ -31,4 +35,44 @@ bady {
 		rgba(78, 44, 190, 1) 100%
 	);
 	color: white !important;
+}
+
+/* Responsive styles */
+@media (max-width: 991px) {
+	.container {
+		width: 100%;
+		margin-left: 0;
+		padding: 0 15px;
+		margin-top: 70px;
+	}
+	
+	.page {
+		padding: 15px;
+	}
+}
+
+@media (max-width: 767px) {
+	.container {
+		margin-top: 80px;
+	}
+}
+
+/* Print styles */
+@media print {
+	body * {
+		visibility: hidden;
+	}
+	
+	#receipt-content,
+	#receipt-content * {
+		visibility: visible;
+	}
+	
+	#receipt-content {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		padding: 20px;
+	}
 }

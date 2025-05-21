@@ -1,20 +1,28 @@
 import React from 'react'
 import HomeInformer from '../components/HomeInformer'
+import { Spinner } from 'react-bootstrap'
 
-const Home = ({ debts }) => {
+const Home = ({ debts, loading }) => {
 	return (
-		<div className='container'>
+		<div className='container pt-5'>
 			<div className='page'>
 				<div className='row'>
-					<div className='col-6'>
-						<img className='w-100' src='/value.png' alt='image' />
+					<div className='col-md-6'>
+						<img className='w-100 mb-3' src='/value.png' alt='image' />
 					</div>
-					<div className='col-6'>
-						<img className='w-100' src='/Chart.png' alt='image' />
+					<div className='col-md-6'>
+						<img className='w-100 mb-3' src='/Chart.png' alt='image' />
 					</div>
 				</div>
 				<hr />
-				<HomeInformer debts={debts} />
+				{loading ? (
+					<div className="text-center py-4">
+						<Spinner animation="border" variant="primary" />
+						<p className="mt-2">Loading data...</p>
+					</div>
+				) : (
+					<HomeInformer debts={debts} />
+				)}
 			</div>
 		</div>
 	)

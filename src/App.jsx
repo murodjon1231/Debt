@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { toast, ToastContainer } from 'react-toastify'
-import { v4 } from 'uuid'
 import Layout from './components/Layout'
 import Call from './pages/Call'
 import Debit from './pages/Debit'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Transactions from './pages/Transactions'
+import axios from 'axios'
+
+const API_URL = 'https://682d90894fae188947568d64.mockapi.io/debt'
 
 const App = () => {
 	const [isLogin, setIsLogin] = useState(localStorage.getItem('isLogin'))
@@ -15,6 +17,7 @@ const App = () => {
 	const [validated, setValidated] = useState(false)
 	const [selected, setSelected] = useState(null)
 	const [search, setSearch] = useState('')
+	const [loading, setLoading] = useState(false)
 	const [debt, setDebt] = useState({
 		firstName: '',
 		lastName: '',
@@ -23,18 +26,32 @@ const App = () => {
 		debt: '',
 		status: 'Borrowing',
 	})
-	const [debts, setDebts] = useState(
-		JSON.parse(localStorage.getItem('debts')) || []
-	)
+	const [debts, setDebts] = useState([])
+
+	const fetchDebts = async () => {
+		setLoading(true)
+		try {
+			const response = await axios.get(API_URL)
+			setDebts(response.data)
+		} catch (error) {
+			toast.error('Failed to fetch debts')
+			console.error('Error fetching debts:', error)
+		} finally {
+			setLoading(false)
+		}
+	}
 
 	useEffect(() => {
-		localStorage.setItem('debts', JSON.stringify(debts))
-	}, [debts])
+		if (isLogin) {
+			fetchDebts()
+		}
+	}, [isLogin])
 
 	const handleClose = () => {
 		setValidated(false)
 		setShow(false)
 	}
+	
 	const handleShow = () => {
 		setValidated(false)
 		setShow(true)
@@ -44,41 +61,57 @@ const App = () => {
 		setDebt({ ...debt, [e.target.id]: e.target.value })
 	}
 
-	let newDebts
-	const handleSubmit = e => {
+	const handleSubmit = async (e) => {
 		e.preventDefault()
 
 		if (e.currentTarget.checkValidity()) {
-			if (selected === null) {	
-				newDebts = [...debts, { ...debt, id: v4() }]
-				setDebts(newDebts)
-				toast.success('Added debt')
-			} else {
-				newDebts = debts.map(item => (debt.id === selected ? debt : item))
-				setDebts(newDebts)
-				toast.success('Updated debt')
+			setLoading(true)
+			try {
+				if (selected === null) {
+					// Create new debt
+					const response = await axios.post(API_URL, debt)
+					setDebts([...debts, response.data])
+					toast.success('Added debt')
+				} else {
+					// Update existing debt
+					const response = await axios.put(`${API_URL}/${selected}`, debt)
+					setDebts(debts.map(item => (item.id === selected ? response.data : item)))
+					toast.success('Updated debt')
+				}
+				handleClose()
+				setDebt({
+					firstName: '',
+					lastName: '',
+					phone: '+998',
+					date: '',
+					debt: '',
+					status: 'Borrowing',
+				})
+				setValidated(false)
+			} catch (error) {
+				toast.error('Operation failed')
+				console.error('Error:', error)
+			} finally {
+				setLoading(false)
 			}
-			handleClose()
-			setDebt({
-				firstName: '',
-				lastName: '',
-				phone: '+998',
-				date: '',
-				debt: '',
-				status: 'Borrowing',
-			})
-			localStorage.setItem('debts', JSON.stringify(newDebts))
-
-			setValidated(false)
 		} else {
 			setValidated(true)
-			toast.error('Please fill!')
+			toast.error('Please fill all required fields!')
 		}
 	}
 
-	const deleteDebt = id => {
-		newDebts = debts.filter(debt => debt.id !== id)
-		setDebts(newDebts)
+	const deleteDebt = async (id) => {
+		setLoading(true)
+		try {
+			await axios.delete(`${API_URL}/${id}`)
+			setDebts(debts.filter(debt => debt.id !== id))
+			toast.success('Debt deleted')
+		} catch (error) {
+			toast.error('Failed to delete debt')
+			console.error('Error deleting debt:', error)
+		} finally {
+			setLoading(false)
+		}
 	}
 
 	const editDebt = id => {
@@ -117,7 +150,10 @@ const App = () => {
 		editDebt,
 		openModal,
 		setDebt,
+		loading,
+		fetchDebts
 	}
+	
 	return (
 		<>
 			<BrowserRouter>
@@ -127,7 +163,7 @@ const App = () => {
 						<Route
 							index
 							element={
-								isLogin ? <Home debts={debts} /> : <Navigate to={'/login'} />
+								isLogin ? <Home debts={debts} loading={loading} /> : <Navigate to={'/login'} />
 							}
 						/>
 						<Route
