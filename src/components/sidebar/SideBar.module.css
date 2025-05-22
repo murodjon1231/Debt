@@ -10,6 +10,11 @@
   transition: transform 0.3s ease;
 }
 
+.sidebar.dark {
+  background-color: #212529;
+  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);
+}
+
 .sidebar-header {
   display: flex;
   justify-content: space-between;
@@ -57,17 +62,54 @@
   padding: 12px 20px;
   color: #333;
   text-decoration: none;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  border-radius: 0 25px 25px 0;
+  margin-right: 10px;
+}
+
+.sidebar.dark .list-items a {
+  color: #adb5bd;
 }
 
 .list-items a:hover {
   background-color: rgba(163, 107, 226, 0.1);
+  color: #a36be2;
+  transform: translateX(5px);
+}
+
+.sidebar.dark .list-items a:hover {
+  background-color: rgba(163, 107, 226, 0.2);
+  color: #a36be2;
+}
+
+.list-items a.active {
+  background-color: #a36be2;
+  color: white;
+  font-weight: 600;
+}
+
+.list-items a.active:hover {
+  background-color: #8e59d1;
+  color: white;
+  transform: translateX(5px);
 }
 
 .close-button {
   display: none;
   cursor: pointer;
   color: #333;
+  padding: 5px;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.sidebar.dark .close-button {
+  color: #adb5bd;
+}
+
+.close-button:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
 }
 
 .mobile-toggle {
@@ -80,11 +122,24 @@
   border-radius: 50%;
   width: 40px;
   height: 40px;
-  display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+  transition: all 0.2s;
+  color: #333;
+}
+
+.mobile-toggle.dark {
+  background-color: #343a40;
+  color: white;
+  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);
+}
+
+.mobile-toggle:hover {
+  transform: scale(1.1);
+  background-color: #a36be2;
+  color: white;
 }
 
 .backdrop {

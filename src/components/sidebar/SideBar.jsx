@@ -1,30 +1,59 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { BsWindowSidebar } from 'react-icons/bs'
-import { FaCoins } from 'react-icons/fa'
+import { FaCoins, FaBars, FaTimes, FaCalculator } from 'react-icons/fa'
 import { GiRotaryPhone } from 'react-icons/gi'
 import { LiaListSolid } from 'react-icons/lia'
-import { FaBars, FaTimes } from 'react-icons/fa'
 import { NavLink } from 'react-router-dom'
+import { AppContext } from '../../App'
 import style from './SideBar.module.css'
 
 const SideBar = () => {
-	const [sidebarOpen, setSidebarOpen] = useState(false);
+	const [sidebarOpen, setSidebarOpen] = useState(false)
+	const { theme, t } = useContext(AppContext)
 
 	const toggleSidebar = () => {
-		setSidebarOpen(!sidebarOpen);
-	};
+		setSidebarOpen(!sidebarOpen)
+	}
 
 	const closeSidebar = () => {
-		setSidebarOpen(false);
-	};
+		setSidebarOpen(false)
+	}
+
+	const menuItems = [
+		{
+			path: '/',
+			icon: <BsWindowSidebar size={24} />,
+			label: t.home
+		},
+		{
+			path: '/debit',
+			icon: <LiaListSolid size={24} />,
+			label: t.debit
+		},
+		{
+			path: '/transactions',
+			icon: <FaCoins size={24} />,
+			label: t.transactions
+		},
+		{
+			path: '/call',
+			icon: <GiRotaryPhone size={24} />,
+			label: t.call
+		},
+		{
+			path: '/calculator',
+			icon: <FaCalculator size={24} />,
+			label: t.calculator
+		}
+	]
 
 	return (
 		<>
-			<div className={style['mobile-toggle']} onClick={toggleSidebar}>
+			<div className={`${style['mobile-toggle']} ${theme}`} onClick={toggleSidebar}>
 				<FaBars size={24} />
 			</div>
 			
-			<div className={`${style['sidebar']} ${sidebarOpen ? style['sidebar-open'] : ''}`}>
+			<div className={`${style['sidebar']} ${theme} ${sidebarOpen ? style['sidebar-open'] : ''}`}>
 				<div className={style['sidebar-header']}>
 					<div className={style['logo']}>
 						<img className={style['logo-img']} src='/Recuva 1.svg' alt='' />
@@ -40,30 +69,18 @@ const SideBar = () => {
 				</div>
 				
 				<ul className={style['list-item']}>
-					<li className={style['list-items']}>
-						<NavLink to={'/'} onClick={closeSidebar}>
-							<BsWindowSidebar size={24} />
-							<span>Home</span>
-						</NavLink>
-					</li>
-					<li className={style['list-items']}>
-						<NavLink to={'/debit'} onClick={closeSidebar}>
-							<LiaListSolid size={24} />
-							<span>Debit</span>
-						</NavLink>
-					</li>
-					<li className={style['list-items']}>
-						<NavLink to={'/transactions'} onClick={closeSidebar}>
-							<FaCoins size={24} />
-							<span>Transactions</span>
-						</NavLink>
-					</li>
-					<li className={style['list-items']}>
-						<NavLink to={'/call'} onClick={closeSidebar}>
-							<GiRotaryPhone size={24} />
-							<span>Call</span>
-						</NavLink>
-					</li>
+					{menuItems.map((item) => (
+						<li key={item.path} className={style['list-items']}>
+							<NavLink 
+								to={item.path} 
+								onClick={closeSidebar}
+								className={({ isActive }) => isActive ? style['active'] : ''}
+							>
+								{item.icon}
+								<span>{item.label}</span>
+							</NavLink>
+						</li>
+					))}
 				</ul>
 			</div>
 			

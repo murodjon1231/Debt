@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Button, Form, InputGroup, Modal, Spinner } from 'react-bootstrap'
 import DebtItem from '../components/debtItem/DebtItem'
 import Empty from '../components/Empty'
 import ReceiptModal from '../components/ReceiptModal'
+import { AppContext } from '../App'
 
 const Debit = ({
 	debts = [],
@@ -23,6 +24,7 @@ const Debit = ({
 }) => {
 	const [showReceipt, setShowReceipt] = useState(false)
 	const [selectedDebt, setSelectedDebt] = useState(null)
+	const { theme, t } = useContext(AppContext)
 
 	const handleShowReceipt = (debtItem) => {
 		setSelectedDebt(debtItem)
@@ -35,20 +37,23 @@ const Debit = ({
 	}
 
 	const filteredDebts = debts.filter(item =>
-		typeof item.firstName === 'string' &&
-		item.firstName.toLowerCase().includes(search.toLowerCase().trim())
+		(typeof item.firstName === 'string' &&
+		item.firstName.toLowerCase().includes(search.toLowerCase().trim())) ||
+		(typeof item.productName === 'string' &&
+		item.productName.toLowerCase().includes(search.toLowerCase().trim()))
 	)
 
 	return (
-		<div className='container pt-5'>
+		<div className={`container pt-5 ${theme}`}>
 			<InputGroup className='mb-3'>
 				<Form.Control
 					value={search}
 					onChange={e => setSearch(e.target.value)}
-					placeholder="Search by first name..."
+					placeholder={t.search}
+					className={theme === 'dark' ? 'bg-dark text-white' : ''}
 				/>
 				<Button onClick={openModal} variant='primary' id='button-addon1'>
-					Add debt
+					{t.addDebt}
 				</Button>
 			</InputGroup>
 
@@ -74,86 +79,128 @@ const Debit = ({
 			</div>
 
 			{/* Add/Edit Debt Modal */}
-			<Modal show={show} onHide={handleClose}>
+			<Modal show={show} onHide={handleClose} className={theme}>
 				<Form noValidate validated={validated} onSubmit={handleSubmit}>
-					<Modal.Header closeButton>
-						<Modal.Title>{selected == null ? 'Add debt' : 'Update debt'}</Modal.Title>
+					<Modal.Header closeButton className={theme === 'dark' ? 'bg-dark text-white' : ''}>
+						<Modal.Title>{selected == null ? t.addDebt : t.updateDebt}</Modal.Title>
 					</Modal.Header>
-					<Modal.Body>
+					<Modal.Body className={theme === 'dark' ? 'bg-dark text-white' : ''}>
 						<Form.Group className='mb-3' controlId='firstName'>
-							<Form.Label>First name</Form.Label>
+							<Form.Label>{t.firstName}</Form.Label>
 							<Form.Control
 								onChange={handleChange}
 								required
 								type='text'
 								value={debt.firstName || ''}
+								className={theme === 'dark' ? 'bg-dark text-white border-secondary' : ''}
 							/>
 							<Form.Control.Feedback>Looks good!</Form.Control.Feedback>
 							<Form.Control.Feedback type='invalid'>Please fill!</Form.Control.Feedback>
 						</Form.Group>
 
 						<Form.Group className='mb-3' controlId='lastName'>
-							<Form.Label>Last name</Form.Label>
+							<Form.Label>{t.lastName}</Form.Label>
 							<Form.Control
 								onChange={handleChange}
 								required
 								type='text'
 								value={debt.lastName || ''}
+								className={theme === 'dark' ? 'bg-dark text-white border-secondary' : ''}
 							/>
 							<Form.Control.Feedback>Looks good!</Form.Control.Feedback>
 							<Form.Control.Feedback type='invalid'>Please fill!</Form.Control.Feedback>
 						</Form.Group>
 
 						<Form.Group className='mb-3' controlId='phone'>
-							<Form.Label>Phone</Form.Label>
+							<Form.Label>{t.phone}</Form.Label>
 							<Form.Control
 								onChange={handleChange}
 								required
 								type='text'
 								value={debt.phone || ''}
+								className={theme === 'dark' ? 'bg-dark text-white border-secondary' : ''}
 							/>
 							<Form.Control.Feedback>Looks good!</Form.Control.Feedback>
 							<Form.Control.Feedback type='invalid'>Please fill!</Form.Control.Feedback>
 						</Form.Group>
 
-						<Form.Group className='mb-3' controlId='debt'>
-							<Form.Label>Debt amount</Form.Label>
+						{/* New Product Name Field */}
+						<Form.Group className='mb-3' controlId='productName'>
+							<Form.Label>{t.productName}</Form.Label>
 							<Form.Control
 								onChange={handleChange}
 								required
-								type='number'
-								value={debt.debt || ''}
+								type='text'
+								value={debt.productName || ''}
+								placeholder="e.g., iPhone 13, Car, Laptop..."
+								className={theme === 'dark' ? 'bg-dark text-white border-secondary' : ''}
 							/>
 							<Form.Control.Feedback>Looks good!</Form.Control.Feedback>
 							<Form.Control.Feedback type='invalid'>Please fill!</Form.Control.Feedback>
 						</Form.Group>
 
+						<div className="row">
+							<div className="col-md-8">
+								<Form.Group className='mb-3' controlId='debt'>
+									<Form.Label>{t.debtAmount}</Form.Label>
+									<Form.Control
+										onChange={handleChange}
+										required
+										type='number'
+										value={debt.debt || ''}
+										className={theme === 'dark' ? 'bg-dark text-white border-secondary' : ''}
+									/>
+									<Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+									<Form.Control.Feedback type='invalid'>Please fill!</Form.Control.Feedback>
+								</Form.Group>
+							</div>
+							
+							{/* New Currency Field */}
+							<div className="col-md-4">
+								<Form.Group className='mb-3' controlId='currency'>
+									<Form.Label>{t.currency}</Form.Label>
+									<Form.Select
+										value={debt.currency || 'USD'}
+										onChange={handleChange}
+										className={theme === 'dark' ? 'bg-dark text-white border-secondary' : ''}
+									>
+										<option value='USD'>USD ($)</option>
+										<option value='UZS'>UZS (сўм)</option>
+										<option value='EUR'>EUR (€)</option>
+										<option value='RUB'>RUB (₽)</option>
+									</Form.Select>
+								</Form.Group>
+							</div>
+						</div>
+
 						<Form.Group className='my-3' controlId='status'>
-							<Form.Label>Status</Form.Label>
+							<Form.Label>{t.status}</Form.Label>
 							<Form.Select
 								value={debt.status || 'Borrowing'}
 								onChange={handleChange}
+								className={theme === 'dark' ? 'bg-dark text-white border-secondary' : ''}
 							>
-								<option value='Borrowing'>Borrowing</option>
-								<option value='Lending'>Lending</option>
+								<option value='Borrowing'>{t.borrowing}</option>
+								<option value='Lending'>{t.lending}</option>
 							</Form.Select>
 						</Form.Group>
 
 						<Form.Group className='mb-3' controlId='date'>
-							<Form.Label>Date</Form.Label>
+							<Form.Label>{t.date}</Form.Label>
 							<Form.Control
 								onChange={handleChange}
 								required
 								type='date'
 								value={debt.date || ''}
+								className={theme === 'dark' ? 'bg-dark text-white border-secondary' : ''}
 							/>
 							<Form.Control.Feedback>Looks good!</Form.Control.Feedback>
 							<Form.Control.Feedback type='invalid'>Please fill!</Form.Control.Feedback>
 						</Form.Group>
 					</Modal.Body>
-					<Modal.Footer>
+					<Modal.Footer className={theme === 'dark' ? 'bg-dark text-white' : ''}>
 						<Button variant='secondary' onClick={handleClose}>
-							Close
+							{t.close}
 						</Button>
 						<Button type='submit' variant='primary' disabled={loading}>
 							{loading ? (
@@ -161,7 +208,7 @@ const Debit = ({
 									<Spinner size="sm" animation="border" className="me-2" />
 									Processing...
 								</>
-							) : selected == null ? 'Add debt' : 'Update'}
+							) : selected == null ? t.addDebt : t.update}
 						</Button>
 					</Modal.Footer>
 				</Form>
