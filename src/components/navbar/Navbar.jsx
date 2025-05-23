@@ -21,7 +21,6 @@ const Navbar = () => {
 					Dashboard By <span className={style["brand-highlight"]}>{currentUser?.name || 'User'}</span>
 				</h4>
 				<div className={style["nav-controls"]}>
-					{/* Language Selector */}
 					<div className={style["language-control"]}>
 						<FaGlobe className={style["control-icon"]} />
 						<select 
@@ -35,7 +34,6 @@ const Navbar = () => {
 						</select>
 					</div>
 
-					{/* Theme Toggle */}
 					<button 
 						onClick={toggleTheme} 
 						className={`${style["theme-toggle"]} ${theme}`}
@@ -44,12 +42,10 @@ const Navbar = () => {
 						{theme === 'light' ? <FaMoon /> : <FaSun />}
 					</button>
 
-					{/* Logout Button */}
 					<button onClick={handleLogout} className={`${style["logout-btn"]} ${theme}`}>
 						{t.logout}
 					</button>
 
-					{/* Profile Button */}
 					<button onClick={() => navigate('/login')} className={style['login-btn']}>
 						<img src="/logo.png" alt="profile" />
 					</button>

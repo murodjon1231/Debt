@@ -24,6 +24,7 @@ const Debit = ({
 }) => {
 	const [showReceipt, setShowReceipt] = useState(false)
 	const [selectedDebt, setSelectedDebt] = useState(null)
+	const [selectedDate, setSelectedDate] = useState('')
 	const { theme, t } = useContext(AppContext)
 
 	const handleShowReceipt = (debtItem) => {
@@ -37,25 +38,43 @@ const Debit = ({
 	}
 
 	const filteredDebts = debts.filter(item =>
-		(typeof item.firstName === 'string' &&
-		item.firstName.toLowerCase().includes(search.toLowerCase().trim())) ||
-		(typeof item.productName === 'string' &&
-		item.productName.toLowerCase().includes(search.toLowerCase().trim()))
+		(
+			(typeof item.firstName === 'string' &&
+				item.firstName.toLowerCase().includes(search.toLowerCase().trim())) ||
+			(typeof item.productName === 'string' &&
+				item.productName.toLowerCase().includes(search.toLowerCase().trim()))
+		) &&
+		(selectedDate ? item.date === selectedDate : true)
 	)
 
 	return (
 		<div className={`container pt-5 ${theme}`}>
-			<InputGroup className='mb-3'>
-				<Form.Control
-					value={search}
-					onChange={e => setSearch(e.target.value)}
-					placeholder={t.search}
-					className={theme === 'dark' ? 'bg-dark text-white' : ''}
-				/>
-				<Button onClick={openModal} variant='primary' id='button-addon1'>
-					{t.addDebt}
-				</Button>
-			</InputGroup>
+			<div className="row g-3 mb-3">
+				<div className="col-md-6">
+					<InputGroup>
+						<Form.Control
+							value={search}
+							onChange={e => setSearch(e.target.value)}
+							placeholder={t.search}
+							className={theme === 'dark' ? 'bg-dark text-white border-secondary' : ''}
+						/>
+					</InputGroup>
+				</div>
+				<div className="col-md-3">
+					<Form.Control
+						type='date'
+						value={selectedDate}
+						onChange={e => setSelectedDate(e.target.value)}
+						className={theme === 'dark' ? 'bg-dark text-white border-secondary' : ''}
+					/>
+				</div>
+				<div className="col-md-3 d-flex gap-2">
+					<Button onClick={openModal} variant='primary'>{t.addDebt}</Button>
+					<Button variant='outline-secondary' onClick={() => setSelectedDate('')}>
+						{t.allDates || 'All Dates'}
+					</Button>
+				</div>
+			</div>
 
 			<div className='page'>
 				{loading ? (
@@ -78,7 +97,6 @@ const Debit = ({
 				)}
 			</div>
 
-			{/* Add/Edit Debt Modal */}
 			<Modal show={show} onHide={handleClose} className={theme}>
 				<Form noValidate validated={validated} onSubmit={handleSubmit}>
 					<Modal.Header closeButton className={theme === 'dark' ? 'bg-dark text-white' : ''}>
@@ -124,13 +142,29 @@ const Debit = ({
 							<Form.Control.Feedback type='invalid'>Please fill!</Form.Control.Feedback>
 						</Form.Group>
 
-						{/* New Product Name Field */}
 						<Form.Group className='mb-3' controlId='productName'>
 							<Form.Label>{t.productName}</Form.Label>
 							<Form.Control
 								onChange={handleChange}
+								onKeyDown={(e) => {
+									if (e.key === 'Enter') {
+										e.preventDefault()
+										const lines = (debt.productName || '').split('\n')
+										const nextLine = `${lines.length + 1}. `
+										const newValue = debt.productName
+											? debt.productName + '\n' + nextLine
+											: '1. '
+										handleChange({
+											target: {
+												id: 'productName',
+												value: newValue
+											}
+										})
+									}
+								}}
 								required
-								type='text'
+								as="textarea"
+								rows={4}
 								value={debt.productName || ''}
 								placeholder="e.g., iPhone 13, Car, Laptop..."
 								className={theme === 'dark' ? 'bg-dark text-white border-secondary' : ''}
@@ -154,8 +188,7 @@ const Debit = ({
 									<Form.Control.Feedback type='invalid'>Please fill!</Form.Control.Feedback>
 								</Form.Group>
 							</div>
-							
-							{/* New Currency Field */}
+
 							<div className="col-md-4">
 								<Form.Group className='mb-3' controlId='currency'>
 									<Form.Label>{t.currency}</Form.Label>
@@ -199,9 +232,7 @@ const Debit = ({
 						</Form.Group>
 					</Modal.Body>
 					<Modal.Footer className={theme === 'dark' ? 'bg-dark text-white' : ''}>
-						<Button variant='secondary' onClick={handleClose}>
-							{t.close}
-						</Button>
+						<Button variant='secondary' onClick={handleClose}>{t.close}</Button>
 						<Button type='submit' variant='primary' disabled={loading}>
 							{loading ? (
 								<>
@@ -214,7 +245,6 @@ const Debit = ({
 				</Form>
 			</Modal>
 
-			{/* Receipt Modal */}
 			{selectedDebt && (
 				<ReceiptModal
 					show={showReceipt}
